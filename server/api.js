@@ -3,13 +3,10 @@ const apiRouter = express.Router();
 const db = require('./db.js');
 const checkMillionDollarIdea = require('./checkMillionDollarIdea.js');
 
-
 ////////////////////////
 ////////Middleware/////
 //////////////////////
-
 ///get Object by ID
-
 apiRouter.use(['/minions/:minionId', '/ideas/:ideaId'], (req, res, next) => {
   const minion = db.getFromDatabaseById('minions', req.params.minionId);
   const idea = db.getFromDatabaseById('ideas', req.params.ideaId);
@@ -23,7 +20,6 @@ apiRouter.use(['/minions/:minionId', '/ideas/:ideaId'], (req, res, next) => {
 });
 
 //get everything
-
 apiRouter.use(['/minions','/ideas','/meetings'], (req, res, next) => {
   const allMinions = db.getAllFromDatabase('minions');
   const allIdeas = db.getAllFromDatabase('ideas');
@@ -36,16 +32,13 @@ apiRouter.use(['/minions','/ideas','/meetings'], (req, res, next) => {
   next();
 });
 
-
 /////////////////////////////////////
 ///////////Minions Routes///////////
 ///////////////////////////////////
-
 //get all minions
 apiRouter.get('/minions', (req, res, next) => {
   res.send(req.allMinions);
 });
-
 
 //Get a specific minion
 apiRouter.get('/minions/:minionId', (req, res, next) => {
@@ -58,13 +51,11 @@ apiRouter.post('/minions', (req, res, next) => {
   res.status(201).send(newMinion);
 });
 
-
 //update a new minion
 apiRouter.put('/minions/:minionId', (req, res, next) => {
   const minionUpdated = db.updateInstanceInDatabase('minions', req.body);
   res.send(minionUpdated);
 });
-
 
 //delete a minion
 apiRouter.delete('/minions/:minionId', (req,res,next) =>{
@@ -72,16 +63,13 @@ apiRouter.delete('/minions/:minionId', (req,res,next) =>{
   res.status(204).send();
 });
 
-
 ////////////////////////////
 ///////////ideas///////////
 //////////////////////////
-
 //get all ideas
 apiRouter.get('/ideas', (req, res, next) => {
   res.send(req.allIdeas);
 });
-
 
 //Get a specific idea
 apiRouter.get('/ideas/:ideaId', (req, res, next) => {
@@ -94,13 +82,11 @@ apiRouter.post('/ideas', checkMillionDollarIdea, (req, res, next) => {
   res.status(201).send(newIdea);
 });
 
-
 //update a new idea
 apiRouter.put('/ideas/:ideaId',  (req, res, next) => {
   const ideaUpdated = db.updateInstanceInDatabase('ideas', req.body);
   res.send(ideaUpdated);
 });
-
 
 //delete a idea
 apiRouter.delete('/ideas/:ideaId', (req,res,next) =>{
@@ -108,16 +94,13 @@ apiRouter.delete('/ideas/:ideaId', (req,res,next) =>{
   res.status(204).send();
 });
 
-
 ///////////////////////////////
 ///////////meetings///////////
 /////////////////////////////
-
 //get all meetings
 apiRouter.get('/meetings', (req, res, next) => {
   res.send(req.allMeetings);
 });
-
 
 //create an meeting
 apiRouter.post('/meetings', (req, res, next) => {
@@ -132,33 +115,26 @@ apiRouter.delete('/meetings', (req, res, next) => {
   res.status(204).send();
 });
 
-
-
 ///////////////////////////////
 ///////////Work///////////
 /////////////////////////////
-
-
 //Get a specific minions work
 apiRouter.get('/minions/:minionId/work', (req, res, next) => {
   const filterWork = req.allWork.filter(work => work.minionId === req.minion.id)
   res.send(filterWork);
 });
 
-
 //create a new minions work
-apiRouter.post('/minions:minionId/work', (req, res, next) => {
+apiRouter.post('/minions/:minionId/work', (req, res, next) => {
   const newWork = db.addToDatabase('work', req.body);
   res.status(201).send(newWork);
 });
-
 
 //delete a minions work
 apiRouter.delete('/minions/:minionId/work/:workId', (req,res,next) =>{
   db.deleteFromDatabasebyId('work', req.params.workId);
   res.status(204).send();
 });
-
 
 //update a minions work
 apiRouter.put('/minions/:minionId/work/:workId', (req, res, next) => {
@@ -172,6 +148,5 @@ apiRouter.put('/minions/:minionId/work/:workId', (req, res, next) => {
     res.status(404).send();
   }
 });
-
 
 module.exports = apiRouter;
